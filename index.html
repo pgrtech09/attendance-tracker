@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Smart College Attendance Tracker</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#1B2A4A">
+<link rel="icon" href="assets/icons/icon-192.png">
+</head>
+<body class="no-rule">
+<div class="loader-shell">
+  <div class="spinner"></div>
+  <p style="color:var(--text-dim);font-family:var(--font-body);font-size:14px;">Opening your register…</p>
+</div>
+<script type="module">
+  import { supabase } from './assets/js/supabase-client.js';
+  const { data: { session } } = await supabase.auth.getSession();
+  window.location.replace(session ? 'dashboard.html' : 'login.html');
+</script>
+</body>
+</html>

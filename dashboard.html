@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Dashboard · Smart College Attendance Tracker</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#1B2A4A">
+<link rel="icon" href="assets/icons/icon-192.png">
+<link rel="stylesheet" href="assets/css/style.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+</head>
+<body>
+<div id="offlineBanner" style="display:none;background:var(--od);color:#fff;text-align:center;padding:8px;font-size:13px;font-weight:700;position:sticky;top:0;z-index:60;">
+  You're offline — changes will sync automatically once you reconnect.
+</div>
+<div class="app-shell">
+  <aside class="sidebar">
+    <div class="sidebar-brand"><div class="mark">A</div><span>Attendance<br>Register</span></div>
+    <nav>
+      <a href="dashboard.html" class="nav-tab" data-nav="dashboard"><span class="material-icons-round">dashboard</span>Dashboard</a>
+      <a href="attendance.html" class="nav-tab" data-nav="attendance"><span class="material-icons-round">fact_check</span>Attendance</a>
+      <a href="calendar.html" class="nav-tab" data-nav="calendar"><span class="material-icons-round">calendar_month</span>Calendar</a>
+      <a href="reports.html" class="nav-tab" data-nav="reports"><span class="material-icons-round">insights</span>Reports</a>
+      <a href="profile.html" class="nav-tab" data-nav="profile"><span class="material-icons-round">person</span>Profile</a>
+      <a href="settings.html" class="nav-tab" data-nav="settings"><span class="material-icons-round">settings</span>Settings</a>
+    </nav>
+    <div class="sidebar-foot">
+      <div class="user-chip">
+        <div class="avatar" data-user-initial>–</div>
+        <div class="who">
+          <div class="n" data-user-name>Loading…</div>
+          <div class="r mono" data-user-roll></div>
+        </div>
+      </div>
+      <a href="#" class="nav-tab" data-logout><span class="material-icons-round">logout</span>Log Out</a>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="mobile-topbar">
+      <div style="display:flex;align-items:center;gap:10px;"><div class="mark">A</div><strong>Attendance Register</strong></div>
+      <button class="icon-btn" id="themeToggleMobile"><span class="material-icons-round" id="themeToggleIconMobile">dark_mode</span></button>
+    </div>
+
+    <div class="install-banner" id="installBanner1">
+      <span class="material-icons-round">install_mobile</span>
+      <span>Install this app on your device for offline access.</span>
+      <button class="btn btn-accent btn-sm" data-install-btn>Install</button>
+      <button class="icon-btn" data-install-dismiss style="background:transparent;border:none;color:#fff;">✕</button>
+    </div>
+
+    <div class="topbar">
+      <div>
+        <h2>Welcome back<span data-user-first-name></span> 👋</h2>
+        <p class="today-chip" id="todayChip"></p>
+      </div>
+      <button class="icon-btn" id="themeToggle"><span class="material-icons-round" id="themeToggleIcon">dark_mode</span></button>
+    </div>
+
+    <div class="grid grid-4">
+      <div class="card stat-card">
+        <div class="stat-icon"><span class="material-icons-round">percent</span></div>
+        <div class="stat-label">Overall Attendance</div>
+        <div class="stat-value mono" id="statOverall">–</div>
+        <div class="stat-sub" id="statOverallSub">Loading…</div>
+      </div>
+      <div class="card stat-card">
+        <div class="stat-icon"><span class="material-icons-round">today</span></div>
+        <div class="stat-label">Today's Classes</div>
+        <div class="stat-value" id="statToday">–</div>
+        <div class="stat-sub" id="statTodaySub"></div>
+      </div>
+      <div class="card stat-card">
+        <div class="stat-icon"><span class="material-icons-round">event_available</span></div>
+        <div class="stat-label">Remaining Classes</div>
+        <div class="stat-value mono" id="statRemaining">–</div>
+        <div class="stat-sub">Until semester end</div>
+      </div>
+      <div class="card stat-card">
+        <div class="stat-icon"><span class="material-icons-round">flag</span></div>
+        <div class="stat-label">Target Progress</div>
+        <div class="stat-value mono" id="statTarget">–</div>
+        <div class="stat-sub" id="statTargetSub"></div>
+      </div>
+    </div>
+
+    <div class="section-title"><h3>Today's Timetable</h3><span class="hint mono" id="weekdayLabel"></span></div>
+    <div id="todayClassList"></div>
+
+    <div class="grid grid-2" style="margin-top:10px;">
+      <div class="card">
+        <h3 style="font-size:15px;margin-bottom:14px;">Attendance Breakdown</h3>
+        <canvas id="pieChart" height="220"></canvas>
+      </div>
+      <div class="card">
+        <h3 style="font-size:15px;margin-bottom:14px;">Monthly Attendance %</h3>
+        <canvas id="lineChart" height="220"></canvas>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:18px;">
+      <h3 style="font-size:15px;margin-bottom:14px;">Subject-wise Attendance</h3>
+      <canvas id="barChart" height="180"></canvas>
+    </div>
+  </main>
+</div>
+
+<nav class="mobile-nav">
+  <a href="dashboard.html" class="active" data-nav="dashboard"><span class="material-icons-round">dashboard</span>Home</a>
+  <a href="attendance.html" data-nav="attendance"><span class="material-icons-round">fact_check</span>Mark</a>
+  <a href="calendar.html" data-nav="calendar"><span class="material-icons-round">calendar_month</span>Calendar</a>
+  <a href="reports.html" data-nav="reports"><span class="material-icons-round">insights</span>Reports</a>
+  <a href="profile.html" data-nav="profile"><span class="material-icons-round">person</span>Profile</a>
+</nav>
+
+<script type="module" src="assets/js/dashboard.js"></script>
+</body>
+</html>
