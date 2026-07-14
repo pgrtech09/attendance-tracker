@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Reports · Smart College Attendance Tracker</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#1B2A4A">
+<link rel="icon" href="assets/icons/icon-192.png">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar">
+    <div class="sidebar-brand"><div class="mark">A</div><span>Attendance<br>Register</span></div>
+    <nav>
+      <a href="dashboard.html" class="nav-tab" data-nav="dashboard"><span class="material-icons-round">dashboard</span>Dashboard</a>
+      <a href="attendance.html" class="nav-tab" data-nav="attendance"><span class="material-icons-round">fact_check</span>Attendance</a>
+      <a href="reports.html" class="nav-tab" data-nav="reports"><span class="material-icons-round">insights</span>Reports</a>
+      <a href="profile.html" class="nav-tab" data-nav="profile"><span class="material-icons-round">person</span>Profile</a>
+      <a href="settings.html" class="nav-tab" data-nav="settings"><span class="material-icons-round">settings</span>Settings</a>
+    </nav>
+    <div class="sidebar-foot">
+      <div class="user-chip">
+        <div class="avatar" data-user-initial>–</div>
+        <div class="who"><div class="n" data-user-name>Loading…</div><div class="r mono" data-user-roll></div></div>
+      </div>
+      <a href="#" class="nav-tab" data-logout><span class="material-icons-round">logout</span>Log Out</a>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="mobile-topbar">
+      <div style="display:flex;align-items:center;gap:10px;"><div class="mark">A</div><strong>Attendance Register</strong></div>
+      <button class="icon-btn" id="themeToggleMobile"><span class="material-icons-round" id="themeToggleIconMobile">dark_mode</span></button>
+    </div>
+    <div class="topbar">
+      <h2>Reports</h2>
+      <div style="display:flex;gap:10px;">
+        <button class="btn btn-ghost btn-sm" id="printBtn"><span class="material-icons-round" style="font-size:16px;">print</span>&nbsp;Print</button>
+        <button class="icon-btn" id="themeToggle"><span class="material-icons-round" id="themeToggleIcon">dark_mode</span></button>
+      </div>
+    </div>
+
+    <div class="grid grid-4">
+      <div class="card stat-card"><div class="stat-label">Working Hours</div><div class="stat-value mono" id="rWorking">–</div><div class="stat-sub" id="rWorkingSub"></div></div>
+      <div class="card stat-card"><div class="stat-label">Present Hours</div><div class="stat-value mono" id="rPresent" style="color:var(--present)">–</div><div class="stat-sub" id="rPresentSub"></div></div>
+      <div class="card stat-card"><div class="stat-label">Absent Hours</div><div class="stat-value mono" id="rAbsent" style="color:var(--absent)">–</div><div class="stat-sub" id="rAbsentSub"></div></div>
+      <div class="card stat-card"><div class="stat-label">Overall %</div><div class="stat-value mono" id="rOverall">–</div><div class="stat-sub">Average of subject %</div></div>
+    </div>
+
+    <div class="grid grid-4" style="margin-top:4px;">
+      <div class="card stat-card"><div class="stat-label">Holidays</div><div class="stat-value mono" id="rHoliday" style="color:var(--holiday)">–</div></div>
+      <div class="card stat-card"><div class="stat-label">Exam Days</div><div class="stat-value mono" id="rExam" style="color:var(--exam)">–</div></div>
+    </div>
+
+    <div class="card" style="margin-top:18px;overflow-x:auto;">
+      <h3 style="font-size:15px;margin-bottom:14px;">Subject-wise Report</h3>
+      <table class="data-table">
+        <thead><tr><th>Subject</th><th>Present</th><th>Absent</th><th>Holiday</th><th>Exam</th><th>Total</th><th>%</th></tr></thead>
+        <tbody id="reportTableBody"></tbody>
+      </table>
+    </div>
+  </main>
+</div>
+
+<nav class="mobile-nav">
+  <a href="dashboard.html" data-nav="dashboard"><span class="material-icons-round">dashboard</span>Home</a>
+  <a href="attendance.html" data-nav="attendance"><span class="material-icons-round">fact_check</span>Mark</a>
+  <a href="reports.html" class="active" data-nav="reports"><span class="material-icons-round">insights</span>Reports</a>
+  <a href="profile.html" data-nav="profile"><span class="material-icons-round">person</span>Profile</a>
+</nav>
+
+<script type="module" src="assets/js/reports.js"></script>
+</body>
+</html>
