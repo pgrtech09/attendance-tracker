@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Log In · Smart College Attendance Tracker</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#1B2A4A">
+<link rel="icon" href="assets/icons/icon-192.png">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+<div class="auth-shell">
+  <div class="auth-card fade-in">
+    <div class="auth-brand">
+      <div class="mark">A</div>
+      <h1>Attendance<br>Register</h1>
+    </div>
+    <p class="auth-sub">Log in with your roll number. Your password is your date of birth as DDMMYYYY.</p>
+
+    <div class="error-banner" id="errBanner"></div>
+
+    <form id="loginForm">
+      <div class="field">
+        <label for="roll">Roll Number</label>
+        <input type="text" id="roll" placeholder="e.g. 23A81A0512" autocomplete="username" required>
+      </div>
+      <div class="field">
+        <label for="pwd">Password</label>
+        <input type="password" id="pwd" placeholder="DDMMYYYY" autocomplete="current-password" required maxlength="8" inputmode="numeric">
+      </div>
+      <div class="field" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;">
+        <label style="display:flex;align-items:center;gap:8px;margin:0;font-size:13.5px;font-weight:500;color:var(--text);">
+          <input type="checkbox" id="remember" style="width:16px;height:16px;"> Remember me
+        </label>
+      </div>
+      <button type="submit" class="btn btn-primary" id="loginBtn">Log In</button>
+    </form>
+    <p class="auth-foot">New student? <a href="register.html">Create an account</a></p>
+  </div>
+</div>
+
+<script type="module">
+  import { loginWithRollNumber, getRememberedRoll, redirectIfLoggedIn } from './assets/js/auth.js';
+
+  await redirectIfLoggedIn();
+
+  const rememberedRoll = getRememberedRoll();
+  if (rememberedRoll) {
+    document.getElementById('roll').value = rememberedRoll;
+    document.getElementById('remember').checked = true;
+  }
+
+  const form = document.getElementById('loginForm');
+  const errBanner = document.getElementById('errBanner');
+  const loginBtn = document.getElementById('loginBtn');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    errBanner.style.display = 'none';
+    loginBtn.disabled = true;
+    loginBtn.textContent = 'Logging in…';
+    try {
+      const roll = document.getElementById('roll').value.trim();
+      const pwd = document.getElementById('pwd').value.trim();
+      const remember = document.getElementById('remember').checked;
+      await loginWithRollNumber(roll, pwd, remember);
+      window.location.href = 'dashboard.html';
+    } catch (err) {
+      errBanner.textContent = err.message;
+      errBanner.style.display = 'block';
+      loginBtn.disabled = false;
+      loginBtn.textContent = 'Log In';
+    }
+  });
+</script>
+</body>
+</html>
