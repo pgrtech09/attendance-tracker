@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Register · Smart College Attendance Tracker</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#1B2A4A">
+<link rel="icon" href="assets/icons/icon-192.png">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+<div class="auth-shell">
+  <div class="auth-card fade-in" style="max-width:520px;">
+    <div class="auth-brand">
+      <div class="mark">A</div>
+      <h1>Create Your<br>Register Entry</h1>
+    </div>
+    <p class="auth-sub">Your password is generated automatically from your date of birth — no need to invent one.</p>
+
+    <div class="error-banner" id="errBanner"></div>
+    <div class="success-banner" id="okBanner"></div>
+
+    <form id="regForm">
+      <div class="field">
+        <label for="fullName">Student Name</label>
+        <input type="text" id="fullName" placeholder="Full name" required>
+      </div>
+      <div class="field">
+        <label for="rollNumber">Roll Number</label>
+        <input type="text" id="rollNumber" placeholder="e.g. 23A81A0512" required>
+      </div>
+      <div class="field">
+        <label for="dob">Date of Birth</label>
+        <input type="date" id="dob" required>
+        <p class="hint">This becomes your password in <span class="mono">DDMMYYYY</span> format.</p>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label for="branch">Branch</label>
+          <select id="branch" required>
+            <option value="" disabled selected>Select branch</option>
+            <option>CSE</option>
+            <option>CSE(AIML)</option>
+            <option>CSE(AIDS)</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="section">Section</label>
+          <select id="section" required>
+            <option value="" disabled selected>Select section</option>
+            <option>II-MA</option>
+            <option>II-MB</option>
+            <option>II-MC</option>
+          </select>
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label for="year">Year</label>
+          <select id="year" required>
+            <option value="1st Year">1st Year</option>
+            <option value="2nd Year" selected>2nd Year</option>
+            <option value="3rd Year">3rd Year</option>
+            <option value="4th Year">4th Year</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="semester">Semester</label>
+          <select id="semester" required>
+            <option>1</option><option>2</option>
+            <option selected>3</option>
+            <option>4</option><option>5</option><option>6</option><option>7</option><option>8</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="card" id="pwdPreviewCard" style="display:none;margin-bottom:18px;background:var(--surface-2);">
+        <p style="font-size:12.5px;color:var(--text-dim);margin:0 0 4px;font-weight:700;">YOUR GENERATED PASSWORD</p>
+        <p class="mono" id="pwdPreview" style="font-size:20px;font-weight:700;margin:0;"></p>
+      </div>
+
+      <button type="submit" class="btn btn-primary" id="regBtn">Register</button>
+    </form>
+    <p class="auth-foot">Already registered? <a href="login.html">Log in</a></p>
+  </div>
+</div>
+
+<script type="module">
+  import { registerStudent, redirectIfLoggedIn } from './assets/js/auth.js';
+  import { dobToPassword } from './assets/js/supabase-client.js';
+
+  await redirectIfLoggedIn();
+
+  const dobInput = document.getElementById('dob');
+  const previewCard = document.getElementById('pwdPreviewCard');
+  const previewText = document.getElementById('pwdPreview');
+  dobInput.addEventListener('change', () => {
+    if (!dobInput.value) { previewCard.style.display = 'none'; return; }
+    previewText.textContent = dobToPassword(dobInput.value);
+    previewCard.style.display = 'block';
+  });
+
+  const form = document.getElementById('regForm');
+  const errBanner = document.getElementById('errBanner');
+  const okBanner = document.getElementById('okBanner');
+  const regBtn = document.getElementById('regBtn');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    errBanner.style.display = 'none';
+    okBanner.style.display = 'none';
+    regBtn.disabled = true;
+    regBtn.textContent = 'Creating account…';
+    try {
+      const payload = {
+        fullName: document.getElementById('fullName').value.trim(),
+        rollNumber: document.getElementById('rollNumber').value.trim(),
+        dob: dobInput.value,
+        branch: document.getElementById('branch').value,
+        section: document.getElementById('section').value,
+        year: document.getElementById('year').value,
+        semester: Number(document.getElementById('semester').value)
+      };
+      if (!payload.fullName || !payload.rollNumber || !payload.dob || !payload.branch || !payload.section) {
+        throw new Error('Please fill in every field.');
+      }
+      const { generatedPassword } = await registerStudent(payload);
+      okBanner.textContent = `Account created! Your password is ${generatedPassword}. Redirecting to login…`;
+      okBanner.style.display = 'block';
+      setTimeout(() => window.location.href = 'login.html', 2200);
+    } catch (err) {
+      errBanner.textContent = err.message;
+      errBanner.style.display = 'block';
+      regBtn.disabled = false;
+      regBtn.textContent = 'Register';
+    }
+  });
+</script>
+</body>
+</html>

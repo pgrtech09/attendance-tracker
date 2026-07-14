@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Profile · Smart College Attendance Tracker</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#1B2A4A">
+<link rel="icon" href="assets/icons/icon-192.png">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar">
+    <div class="sidebar-brand"><div class="mark">A</div><span>Attendance<br>Register</span></div>
+    <nav>
+      <a href="dashboard.html" class="nav-tab" data-nav="dashboard"><span class="material-icons-round">dashboard</span>Dashboard</a>
+      <a href="attendance.html" class="nav-tab" data-nav="attendance"><span class="material-icons-round">fact_check</span>Attendance</a>
+      <a href="reports.html" class="nav-tab" data-nav="reports"><span class="material-icons-round">insights</span>Reports</a>
+      <a href="profile.html" class="nav-tab" data-nav="profile"><span class="material-icons-round">person</span>Profile</a>
+      <a href="settings.html" class="nav-tab" data-nav="settings"><span class="material-icons-round">settings</span>Settings</a>
+    </nav>
+    <div class="sidebar-foot">
+      <div class="user-chip">
+        <div class="avatar" data-user-initial>–</div>
+        <div class="who"><div class="n" data-user-name>Loading…</div><div class="r mono" data-user-roll></div></div>
+      </div>
+      <a href="#" class="nav-tab" data-logout><span class="material-icons-round">logout</span>Log Out</a>
+    </div>
+  </aside>
+
+  <main class="main" style="max-width:640px;">
+    <div class="mobile-topbar">
+      <div style="display:flex;align-items:center;gap:10px;"><div class="mark">A</div><strong>Attendance Register</strong></div>
+      <button class="icon-btn" id="themeToggleMobile"><span class="material-icons-round" id="themeToggleIconMobile">dark_mode</span></button>
+    </div>
+    <div class="topbar"><h2>Profile</h2><button class="icon-btn" id="themeToggle"><span class="material-icons-round" id="themeToggleIcon">dark_mode</span></button></div>
+
+    <div class="card" style="text-align:center;padding:32px 22px;">
+      <div style="position:relative;width:96px;margin:0 auto 16px;">
+        <img id="avatarPreview" src="" style="width:96px;height:96px;border-radius:50%;object-fit:cover;display:none;border:3px solid var(--accent);">
+        <div id="avatarInitials" class="avatar" style="width:96px;height:96px;font-size:32px;"></div>
+        <label for="avatarInput" style="position:absolute;bottom:0;right:0;width:32px;height:32px;border-radius:50%;background:var(--ink-800);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:var(--shadow-sm);">
+          <span class="material-icons-round" style="font-size:16px;">edit</span>
+        </label>
+        <input type="file" id="avatarInput" accept="image/*" style="display:none;">
+      </div>
+      <h3 id="profileName" style="font-size:20px;"></h3>
+      <p class="mono hint" id="profileRoll"></p>
+    </div>
+
+    <div class="card" style="margin-top:18px;">
+      <h3 style="font-size:15px;margin-bottom:16px;">Edit Details</h3>
+      <div class="success-banner" id="okBanner"></div>
+      <form id="profileForm">
+        <div class="field"><label>Student Name</label><input type="text" id="fullName" required></div>
+        <div class="field-row">
+          <div class="field"><label>Branch</label>
+            <select id="branch">
+              <option>CSE</option><option>CSE(AIML)</option><option>CSE(AIDS)</option>
+            </select>
+          </div>
+          <div class="field"><label>Section</label>
+            <select id="section"><option>II-MA</option><option>II-MB</option><option>II-MC</option></select>
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field"><label>Year</label>
+            <select id="year"><option>1st Year</option><option>2nd Year</option><option>3rd Year</option><option>4th Year</option></select>
+          </div>
+          <div class="field"><label>Semester</label>
+            <select id="semester">
+              <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option>
+            </select>
+          </div>
+        </div>
+        <div class="field"><label>Roll Number (cannot be changed)</label><input type="text" id="rollNumberDisplay" disabled></div>
+        <button type="submit" class="btn btn-primary" id="saveProfileBtn">Save Changes</button>
+      </form>
+    </div>
+  </main>
+</div>
+
+<nav class="mobile-nav">
+  <a href="dashboard.html" data-nav="dashboard"><span class="material-icons-round">dashboard</span>Home</a>
+  <a href="attendance.html" data-nav="attendance"><span class="material-icons-round">fact_check</span>Mark</a>
+  <a href="reports.html" data-nav="reports"><span class="material-icons-round">insights</span>Reports</a>
+  <a href="profile.html" class="active" data-nav="profile"><span class="material-icons-round">person</span>Profile</a>
+</nav>
+
+<script type="module" src="assets/js/profile.js"></script>
+</body>
+</html>
