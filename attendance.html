@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Mark Attendance · Smart College Attendance Tracker</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#1B2A4A">
+<link rel="icon" href="assets/icons/icon-192.png">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+<div id="offlineBanner" style="display:none;background:var(--od);color:#fff;text-align:center;padding:8px;font-size:13px;font-weight:700;position:sticky;top:0;z-index:60;">
+  You're offline — changes will sync automatically once you reconnect.
+</div>
+<div class="app-shell">
+  <aside class="sidebar">
+    <div class="sidebar-brand"><div class="mark">A</div><span>Attendance<br>Register</span></div>
+    <nav>
+      <a href="dashboard.html" class="nav-tab" data-nav="dashboard"><span class="material-icons-round">dashboard</span>Dashboard</a>
+      <a href="attendance.html" class="nav-tab" data-nav="attendance"><span class="material-icons-round">fact_check</span>Attendance</a>
+      <a href="reports.html" class="nav-tab" data-nav="reports"><span class="material-icons-round">insights</span>Reports</a>
+      <a href="profile.html" class="nav-tab" data-nav="profile"><span class="material-icons-round">person</span>Profile</a>
+      <a href="settings.html" class="nav-tab" data-nav="settings"><span class="material-icons-round">settings</span>Settings</a>
+    </nav>
+    <div class="sidebar-foot">
+      <div class="user-chip">
+        <div class="avatar" data-user-initial>–</div>
+        <div class="who"><div class="n" data-user-name>Loading…</div><div class="r mono" data-user-roll></div></div>
+      </div>
+      <a href="#" class="nav-tab" data-logout><span class="material-icons-round">logout</span>Log Out</a>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="mobile-topbar">
+      <div style="display:flex;align-items:center;gap:10px;"><div class="mark">A</div><strong>Attendance Register</strong></div>
+      <button class="icon-btn" id="themeToggleMobile"><span class="material-icons-round" id="themeToggleIconMobile">dark_mode</span></button>
+    </div>
+
+    <div class="topbar">
+      <div><h2>Mark Attendance</h2><p class="today-chip" id="todayChip"></p></div>
+      <button class="icon-btn" id="themeToggle"><span class="material-icons-round" id="themeToggleIcon">dark_mode</span></button>
+    </div>
+
+    <div class="section-title" style="margin-top:0;"><h3 id="stampSectionTitle">Today's Classes</h3></div>
+    <div class="card" style="margin-bottom:14px;">
+      <div class="field" style="max-width:220px;margin-bottom:14px;">
+        <label for="markDate">Date</label>
+        <input type="date" id="markDate">
+        <p class="hint" style="margin-top:6px;">You can only mark today or a past date — future attendance isn't known yet.</p>
+      </div>
+      <p class="hint" style="margin-bottom:8px;">Holiday and Exam Day apply to the <strong>whole day</strong> at once — use these instead of marking each class:</p>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;">
+        <button class="stamp" data-day-status="holiday" id="dayHolidayBtn" style="flex:none;min-width:140px;">Mark Day as Holiday</button>
+        <button class="stamp" data-day-status="exam" id="dayExamBtn" style="flex:none;min-width:140px;">Mark Day as Exam Day</button>
+      </div>
+    </div>
+    <div id="todayStampList"></div>
+
+    <div class="section-title"><h3>Target Attendance</h3></div>
+    <div class="card">
+      <div class="field-row" style="align-items:flex-end;">
+        <div class="field" style="max-width:160px;">
+          <label for="targetInput">Target %</label>
+          <select id="targetInput">
+            <option value="75">75%</option>
+            <option value="80">80%</option>
+            <option value="85">85%</option>
+            <option value="90">90%</option>
+            <option value="95">95%</option>
+          </select>
+        </div>
+        <button class="btn btn-accent btn-sm" id="saveTargetBtn" style="margin-bottom:18px;">Save Target</button>
+      </div>
+      <div class="grid grid-2">
+        <div>
+          <p class="stat-label" style="font-size:11.5px;color:var(--text-dim);font-weight:700;">CURRENT (AVERAGE OF SUBJECTS)</p>
+          <p class="mono" id="targetCurrent" style="font-size:22px;font-weight:700;">–</p>
+        </div>
+        <div>
+          <p class="stat-label" style="font-size:11.5px;color:var(--text-dim);font-weight:700;">STATUS</p>
+          <p class="mono" id="targetStatus" style="font-size:22px;font-weight:700;">–</p>
+        </div>
+      </div>
+      <div class="progress-track" style="margin-top:16px;"><div class="progress-fill" id="targetProgressFill" style="width:0%;background:var(--accent);"></div></div>
+      <p class="hint" style="margin-top:10px;">Per-subject classes needed to hit your target are shown against each subject below.</p>
+    </div>
+
+    <div class="section-title"><h3>Subject-wise Attendance</h3></div>
+    <div id="subjectList"></div>
+  </main>
+</div>
+
+<nav class="mobile-nav">
+  <a href="dashboard.html" data-nav="dashboard"><span class="material-icons-round">dashboard</span>Home</a>
+  <a href="attendance.html" class="active" data-nav="attendance"><span class="material-icons-round">fact_check</span>Mark</a>
+  <a href="reports.html" data-nav="reports"><span class="material-icons-round">insights</span>Reports</a>
+  <a href="profile.html" data-nav="profile"><span class="material-icons-round">person</span>Profile</a>
+</nav>
+
+<script type="module" src="assets/js/attendance.js"></script>
+</body>
+</html>
