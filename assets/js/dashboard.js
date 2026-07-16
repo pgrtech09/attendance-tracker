@@ -1,0 +1,79 @@
+import { supabase } from './supabase-client.js';
+import { initShell, toast } from './app.js';
+import { WEEKDAYS } from './reference-data.js';
+import { subjectWiseStats, averageSubjectPercentage, remainingWorkingDaysInRange } from './attendance-calc.js';
+
+const shell = await initShell('dashboard');
+if (shell) await loadDashboard(shell.session.user.id);
+
+async function loadDashboard(userId) {
+  const todayISO = new Date().toISOString().slice(0, 10);
+  const weekday = new Date().getDay();
+  document.getElementById('weekdayLabel').textContent = WEEKDAYS[weekday];
+
+  const [{ data: subjects }, { data: timetable }, { data: attendance }, { data: settings }, { data: holidays }] = await Promise.all([
+    supabase.from('subjects').select('*').order('code'),
+    supabase.from('timetable').select('*, subjects(*)').eq('user_id', userId).eq('weekday', weekday).order('period_order'),
+    supabase.from('attendance').select('*').eq('user_id', userId),
+    supabase.from('semester_settings').select('*').eq('user_id', userId).maybeSingle(),
+    supabase.from('holidays').select('date').eq('user_id', userId)
+  ]);
+
+  try { renderTodayClasses(timetable || [], attendance || [], todayISO); } catch (e) { console.error('renderTodayClasses failed', e); }
+  try { renderStatCards(subjects || [], attendance || [], settings, holidays || [], timetable || []); } catch (e) { console.error('renderStatCards failed', e); }
+}
+
+function renderTodayClasses(timetable, attendance, todayISO) {
+  const list = document.getElementById('todayClassList');
+  const statToday = document.getElementById('statToday');
+  const statTodaySub = document.getElementById('statTodaySub');
+  statToday.textContent = timetable.length;
+
+  if (timetable.length === 0) {
+    list.innerHTML = `<div class="empty-state card"><span class="material-icons-round">weekend</span><p>No classes scheduled today. Enjoy the day off!</p></div>`;
+    statTodaySub.textContent = 'No classes today';
+    return;
+  }
+
+  const marked = attendance.filter(a => a.date === todayISO);
+  const markedCount = timetable.filter(t => marked.some(m => m.subject_id === t.subject_id)).length;
+  statTodaySub.textContent = `${markedCount}/${timetable.length} marked`;
+
+  list.innerHTML = timetable.map(t => {
+    const record = marked.find(m => m.subject_id === t.subject_id);
+    const statusHtml = record
+      ? `<span class="status-pill status-${record.status}">${record.status.replace('_', ' ')}</span>`
+      : `<span class="status-pill status-unmarked">Unmarked</span>`;
+    const meta = [t.faculty, t.room].filter(Boolean).join(' · ');
+    return `
+      <div class="class-item">
+        <div class="time">${t.start_time}</div>
+        <div class="name">${t.subjects.code}<div class="tag">${t.subjects.name}${meta ? ' · ' + meta : ''}</div></div>
+        ${statusHtml}
+      </div>`;
+  }).join('');
+}
+
+function renderStatCards(subjects, attendance, settings, holidays, timetable) {
+  const stats = subjectWiseStats(attendance, subjects);
+  const avg = averageSubjectPercentage(stats);
+  document.getElementById('statOverall').textContent = `${avg.toFixed(1)}%`;
+  document.getElementById('statOverallSub').textContent = `Average across ${subjects.length} subjects`;
+
+  const target = settings?.target_percentage ?? 75;
+  const onTrack = avg >= target;
+  document.getElementById('statTarget').textContent = `${target}%`;
+  document.getElementById('statTargetSub').textContent = onTrack
+    ? `On track — ${avg.toFixed(1)}% average`
+    : `Below target — ${avg.toFixed(1)}% average`;
+
+  if (settings?.end_date) {
+    const { remainingClasses, remainingDays } = remainingWorkingDaysInRange(
+      settings.start_date, settings.end_date, holidays.map(h => h.date)
+    );
+    document.getElementById('statRemaining').textContent = remainingClasses;
+    document.querySelector('#statRemaining').nextElementSibling.textContent = `${remainingDays} working days left`;
+  } else {
+    document.getElementById('statRemaining').textContent = '–';
+  }
+}
