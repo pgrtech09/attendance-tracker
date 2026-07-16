@@ -3,6 +3,8 @@ import { initShell, toast } from './app.js';
 import { WEEKDAYS } from './reference-data.js';
 import { tallyRecords, subjectWiseStats, averageSubjectPercentage, monthlyBreakdown, remainingWorkingDaysInRange } from './attendance-calc.js';
 
+let pieChart, barChart, lineChart;
+
 const shell = await initShell('dashboard');
 if (shell) await loadDashboard(shell.session.user.id);
 
@@ -80,7 +82,6 @@ function renderStatCards(subjects, attendance, settings, holidays, timetable) {
   }
 }
 
-let pieChart, barChart, lineChart;
 function renderCharts(subjects, attendance) {
   const overall = tallyRecords(attendance);
   const pieCtx = document.getElementById('pieChart');
