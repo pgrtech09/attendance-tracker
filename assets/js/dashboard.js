@@ -19,9 +19,9 @@ async function loadDashboard(userId) {
     supabase.from('holidays').select('date').eq('user_id', userId)
   ]);
 
-  renderTodayClasses(timetable || [], attendance || [], todayISO);
-  renderStatCards(subjects || [], attendance || [], settings, holidays || [], timetable || []);
-  renderCharts(subjects || [], attendance || []);
+  try { renderTodayClasses(timetable || [], attendance || [], todayISO); } catch (e) { console.error('renderTodayClasses failed', e); }
+  try { renderStatCards(subjects || [], attendance || [], settings, holidays || [], timetable || []); } catch (e) { console.error('renderStatCards failed', e); }
+  try { renderCharts(subjects || [], attendance || []); } catch (e) { console.error('renderCharts failed', e); toast('Charts failed to load — check console for details'); }
 }
 
 function renderTodayClasses(timetable, attendance, todayISO) {
@@ -95,7 +95,7 @@ function renderCharts(subjects, attendance) {
         borderWidth: 0
       }]
     },
-    options: { plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 11 } } } }, cutout: '65%' }
+    options: { maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 11 } } } }, cutout: '65%' }
   });
 
   const subjStats = subjectWiseStats(attendance, subjects);
@@ -113,6 +113,7 @@ function renderCharts(subjects, attendance) {
       }]
     },
     options: {
+      maintainAspectRatio: false,
       plugins: { legend: { display: false } },
       scales: { y: { beginAtZero: true, max: 100 } }
     }
@@ -134,6 +135,6 @@ function renderCharts(subjects, attendance) {
         tension: 0.35
       }]
     },
-    options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, max: 100 } } }
+    options: { maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, max: 100 } } }
   });
 }
